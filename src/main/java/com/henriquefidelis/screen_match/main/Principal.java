@@ -1,9 +1,12 @@
 package com.henriquefidelis.screen_match.main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import com.henriquefidelis.screen_match.models.DadosEpisodio;
 import com.henriquefidelis.screen_match.models.DadosSerie;
 import com.henriquefidelis.screen_match.models.DadosTemporada;
 import com.henriquefidelis.screen_match.service.ConsumoAPI;
@@ -37,15 +40,18 @@ public class Principal {
 		}
 
 		temporadas.forEach(System.out::println);
-
-//        for(int i = 0; i < dados.totalDeTemporadas(); i++) {
-//            List<DadosEpisodio> episodios = temporadas.get(i).episodios();
-//            for(int j = 0; j < episodios.size(); j++) {
-//                System.out.println(episodios.get(j).titulo());
-//            }
-//        }
-
         temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+        List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+                .flatMap(t -> t.episodios().stream())
+                .collect(Collectors.toList());
+        
+        System.out.println("\n===== 5 MELHORES EPISÓDIOS =====");
+        dadosEpisodios.stream()
+                .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                .limit(5)
+                .forEach(System.out::println);
     }
     
 }
