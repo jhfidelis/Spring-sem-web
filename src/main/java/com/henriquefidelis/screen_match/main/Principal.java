@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -64,21 +65,21 @@ public class Principal {
         System.out.println("");
         episodios.forEach(System.out::println);
 
-        System.out.print("\nDigite o nome de um episódio dessa série: ");
-        var tituloEpisodio = sc.nextLine();
+        // System.out.print("\nDigite o nome de um episódio dessa série: ");
+        // var tituloEpisodio = sc.nextLine();
 
-        Optional<Episodio> epBuscado = episodios.stream()
-                .filter(e -> e.getTitulo().toUpperCase().contains(tituloEpisodio.toUpperCase()))
-                .findFirst();
+        // Optional<Episodio> epBuscado = episodios.stream()
+        //         .filter(e -> e.getTitulo().toUpperCase().contains(tituloEpisodio.toUpperCase()))
+        //         .findFirst();
 
-        if (epBuscado.isPresent()) {
-            System.out.println("Episódio encontrado!");
-            System.out.println("Nome do episódio: " + epBuscado.get().getTitulo());
-            System.out.println("Episódio número: " + epBuscado.get().getNumeroEpisodio() + 
-                    " - Temporada: " + epBuscado.get().getTemporada());
-        } else {
-            System.out.println("Episódio não encontrado!");
-        }
+        // if (epBuscado.isPresent()) {
+        //     System.out.println("Episódio encontrado!");
+        //     System.out.println("Nome do episódio: " + epBuscado.get().getTitulo());
+        //     System.out.println("Episódio número: " + epBuscado.get().getNumeroEpisodio() + 
+        //             " - Temporada: " + epBuscado.get().getTemporada());
+        // } else {
+        //     System.out.println("Episódio não encontrado!");
+        // }
 
         // System.out.print("\nA partir de que ano você deseja visualizar os episódios? ");
         // var ano = sc.nextInt();
@@ -95,6 +96,13 @@ public class Principal {
         //                 "Temporada: " + e.getTemporada() +
         //                         " | Episódio: " + e.getTitulo() +
         //                         " | Data de lançamento: " + e.getDataDeLancamento().format(formatador)));
+
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.groupingBy(Episodio::getTemporada, 
+                        Collectors.averagingDouble(Episodio::getAvaliacao)));
+
+        System.out.println(avaliacoesPorTemporada);
     }
 
 }
