@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,9 +101,20 @@ public class Principal {
         Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
                 .filter(e -> e.getAvaliacao() > 0.0)
                 .collect(Collectors.groupingBy(Episodio::getTemporada, 
-                        Collectors.averagingDouble(Episodio::getAvaliacao)));
+                Collectors.averagingDouble(Episodio::getAvaliacao)));
+                
+                System.out.println(avaliacoesPorTemporada);
+                
+        DoubleSummaryStatistics est = episodios.stream()
+                .filter(e -> e.getAvaliacao() > 0.0)
+                .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));
 
-        System.out.println(avaliacoesPorTemporada);
+        System.out.println(
+            "Média: " + est.getAverage() + "\n" +
+            "Melhor avaliação: " + est.getMax() + "\n" +
+            "Pior avaliação: " + est.getMin() + "\n" +
+            "Quantidade de avaliações: " + est.getCount()
+        );
     }
 
 }
