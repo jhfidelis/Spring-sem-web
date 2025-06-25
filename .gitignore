@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar arquivos compilados e pastas de build
+bin/
+target/
+*.class
