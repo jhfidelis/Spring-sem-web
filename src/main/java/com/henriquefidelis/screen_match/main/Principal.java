@@ -1,10 +1,14 @@
 package com.henriquefidelis.screen_match.main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import com.henriquefidelis.screen_match.models.DadosSerie;
 import com.henriquefidelis.screen_match.models.DadosTemporada;
+import com.henriquefidelis.screen_match.models.Serie;
 import com.henriquefidelis.screen_match.service.ConsumoAPI;
 import com.henriquefidelis.screen_match.service.ConverteDados;
 
@@ -27,7 +31,7 @@ public class Principal {
                     1 - Buscar séries
                     2 - Buscar episódios
                     3 - Listar séries buscadas
-                    
+
                     0 - sair
                     """;
 
@@ -45,7 +49,7 @@ public class Principal {
                 case 3:
                     listarSeriesBuscadas();
                     break;
-                    case 0:
+                case 0:
                     System.out.println("Saindo...");
                     break;
                 default:
@@ -75,7 +79,8 @@ public class Principal {
         List<DadosTemporada> temporadas = new ArrayList<>();
 
         for (int i = 1; i <= dadosSerie.totalDeTemporadas(); i++) {
-            var json = consumoAPI.obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
+            var json = consumoAPI
+                    .obterDados(ENDERECO + dadosSerie.titulo().replace(" ", "+") + "&season=" + i + API_KEY);
             DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
             temporadas.add(dadosTemporada);
         }
@@ -83,7 +88,15 @@ public class Principal {
     }
 
     private void listarSeriesBuscadas() {
-        dadosSeries.forEach(System.out::println);
+        List<Serie> series = new ArrayList<>();
+
+        series = dadosSeries.stream()
+                .map(d -> new Serie(d))
+                .collect(Collectors.toList());
+
+        series.stream()
+                .sorted(Comparator.comparing(Serie::getGenero))
+                .forEach(System.out::println);
     }
 
 }
