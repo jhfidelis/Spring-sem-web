@@ -22,7 +22,7 @@ public class Principal {
     private ConverteDados conversor = new ConverteDados();
 
     private final String ENDERECO = "https://www.omdbapi.com/?t=";
-    private final String API_KEY = "&apikey=5282043b";
+    private final String API_KEY = "&apikey=" + System.getenv("OMDB_APIKEY");
 
     private List<DadosSerie> dadosSeries = new ArrayList<>();
 
