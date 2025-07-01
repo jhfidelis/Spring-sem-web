@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.henriquefidelis.screen_match.models.DadosSerie;
 import com.henriquefidelis.screen_match.models.DadosTemporada;
 import com.henriquefidelis.screen_match.models.Serie;
+import com.henriquefidelis.screen_match.repository.SerieRepository;
 import com.henriquefidelis.screen_match.service.ConsumoAPI;
 import com.henriquefidelis.screen_match.service.ConverteDados;
 
@@ -22,6 +25,13 @@ public class Principal {
     private final String API_KEY = "&apikey=5282043b";
 
     private List<DadosSerie> dadosSeries = new ArrayList<>();
+
+    @Autowired
+    private SerieRepository repository;
+
+    public Principal(SerieRepository repository) {
+        this.repository = repository;
+    }
 
     public void exibirMenu() {
         var opcao = -1;
@@ -60,7 +70,8 @@ public class Principal {
 
     public void buscarSeriesWeb() {
         DadosSerie dados = getDadosSerie();
-        dadosSeries.add(dados);
+        Serie serie = new Serie(dados);
+        repository.save(serie);
         System.out.println(dados);
     }
 

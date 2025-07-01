@@ -1,5 +1,7 @@
 package com.henriquefidelis.screen_match.models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.OptionalDouble;
 
 import jakarta.persistence.Column;
@@ -10,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "tb_series")
@@ -31,6 +34,9 @@ public class Serie {
     private String atores;
     private String poster;
     private String sinopse;
+
+    @Transient
+    private List<Episodio> episodios = new ArrayList<>();
     
     public Serie(DadosSerie dadosSerie) {
         this.titulo = dadosSerie.titulo();
@@ -38,6 +44,8 @@ public class Serie {
         this.avaliacao = OptionalDouble.of(Double.valueOf(dadosSerie.avaliacao())).orElse(0);
         this.genero = Categoria.fromString(dadosSerie.genero().split(",")[0].trim());
         this.atores = dadosSerie.atores();
+        this.poster = dadosSerie.poster();
+        this.sinopse = dadosSerie.sinopse();
     }
 
     public Long getId() {
@@ -102,6 +110,14 @@ public class Serie {
 
     public void setSinopse(String sinopse) {
         this.sinopse = sinopse;
+    }
+    
+    public List<Episodio> getEpisodios() {
+        return episodios;
+    }
+
+    public void setEpisodios(List<Episodio> episodios) {
+        this.episodios = episodios;
     }
 
     @Override
