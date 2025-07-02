@@ -88,7 +88,7 @@ public class Principal {
 
     private void buscarEpisodioPorSerie() {
         listarSeriesBuscadas();
-        System.out.print("Escolha uma série pelo nome: ");
+        System.out.print("\nEscolha uma série pelo nome: ");
         var nomeSerie = sc.nextLine();
 
         Optional<Serie> serie = series.stream()
