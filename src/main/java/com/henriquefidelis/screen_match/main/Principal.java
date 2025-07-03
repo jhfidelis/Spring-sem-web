@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
- import com.henriquefidelis.screen_match.models.DadosSerie;
+import com.henriquefidelis.screen_match.models.DadosSerie;
 import com.henriquefidelis.screen_match.models.DadosTemporada;
 import com.henriquefidelis.screen_match.models.Episodio;
 import com.henriquefidelis.screen_match.models.Serie;
@@ -43,6 +43,7 @@ public class Principal {
                     2 - Buscar episódios
                     3 - Listar séries buscadas
                     4 - Buscar série por título
+                    5 - Buscar séries por ator
 
                     0 - sair
                     """;
@@ -63,6 +64,9 @@ public class Principal {
                     break;
                 case 4:
                     buscarSeriePorTitulo();
+                    break;
+                case 5:
+                    buscarSeriesPorAtor();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -141,6 +145,18 @@ public class Principal {
         } else {
             System.out.println("Série não encontrada!");
         }
+    }
+
+    private void buscarSeriesPorAtor() {
+        System.out.print("Digite o nome do ator: ");
+        var nomeAtor = sc.nextLine();
+        System.out.print("Digite a nota mínima de avaliação: ");
+        var avaliacao = sc.nextDouble();
+
+        List<Serie> seriesEncontradas = repository.findByAtoresContainingIgnoreCaseAndAvaliacaoGreaterThanEqual(nomeAtor, avaliacao);
+        
+        System.out.println("\n-> Séries que " + nomeAtor.toUpperCase() + " atuou:");
+        seriesEncontradas.forEach(s -> System.out.println(s.getTitulo() + " | Avaliação: " + s.getAvaliacao()));
     }
 
 }
