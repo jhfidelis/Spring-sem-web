@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import com.henriquefidelis.screen_match.models.Categoria;
 import com.henriquefidelis.screen_match.models.DadosSerie;
 import com.henriquefidelis.screen_match.models.DadosTemporada;
 import com.henriquefidelis.screen_match.models.Episodio;
@@ -17,7 +18,7 @@ import com.henriquefidelis.screen_match.service.ConverteDados;
 
 public class Principal {
 
-    private Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in, "UTF-8");
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConverteDados conversor = new ConverteDados();
 
@@ -45,6 +46,7 @@ public class Principal {
                     4 - Buscar série por título
                     5 - Buscar séries por ator
                     6 - Top 5 Séries
+                    7 - Buscar séries por categoria
 
                     0 - sair
                     """;
@@ -71,6 +73,9 @@ public class Principal {
                     break;
                 case 6:
                     buscarTop5Series();
+                    break;
+                case 7:
+                    buscarSeriesPorCategoria();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -167,6 +172,17 @@ public class Principal {
         List<Serie> topSeries = repository.findTop5ByOrderByAvaliacaoDesc();
 
         topSeries.forEach(s -> System.out.println(s.getTitulo() + " | Avaliação: " + s.getAvaliacao()));
+    }
+
+    public void buscarSeriesPorCategoria() {
+        System.out.print("Digite a categoria que você deseja buscar: ");
+        var nomeGenero = sc.nextLine();
+
+        Categoria categoria = Categoria.fromPortugues(nomeGenero);
+        List<Serie> seriesPorCategoria = repository.findByGenero(categoria);
+
+        System.out.println("Séries da categoria " + nomeGenero + ":");
+        seriesPorCategoria.forEach(System.out::println);
     }
 
 }
