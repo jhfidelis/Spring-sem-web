@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.henriquefidelis.screen_match.models.Categoria;
+import com.henriquefidelis.screen_match.models.Episodio;
 import com.henriquefidelis.screen_match.models.Serie;
 
 public interface SerieRepository extends JpaRepository<Serie, Long> {
@@ -22,6 +23,9 @@ public interface SerieRepository extends JpaRepository<Serie, Long> {
 
     @Query("SELECT s FROM Serie s WHERE s.totalDeTemporadas <= :totalTemporadas AND s.avaliacao >= :avaliacao")
     List<Serie> buscarSeriesPorTemporadaEAvaliacao(int totalTemporadas, double avaliacao);
+
+    @Query("SELECT e FROM Serie s JOIN s.episodios e WHERE e.titulo ILIKE %:trechoEpisodio%")
+    List<Episodio> buscarEpisodiosPorTrecho(String trechoEpisodio);
 
     
 }
