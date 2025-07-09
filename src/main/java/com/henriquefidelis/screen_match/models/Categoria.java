@@ -1,7 +1,5 @@
 package com.henriquefidelis.screen_match.models;
 
-//import java.text.Normalizer;
-
 public enum Categoria {
     ACAO("Action", "Ação"),
     ROMANCE("Romance", "Romance"),
