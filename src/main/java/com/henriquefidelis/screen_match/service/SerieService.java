@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.henriquefidelis.screen_match.dto.SerieDTO;
+import com.henriquefidelis.screen_match.models.Serie;
 import com.henriquefidelis.screen_match.repository.SerieRepository;
 
 @Service
@@ -16,7 +17,15 @@ public class SerieService {
     private SerieRepository repository;
 
     public List<SerieDTO> obterTodasAsSeries() {
-        return repository.findAll().stream()
+        return converterDados(repository.findAll());
+    }
+
+    public List<SerieDTO> obterTop5Series() {
+        return converterDados(repository.findTop5ByOrderByAvaliacaoDesc());
+    }
+
+    private List<SerieDTO> converterDados(List<Serie> series) {
+        return series.stream()
                 .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getTotalDeTemporadas(),
                         s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse()))
                 .collect(Collectors.toList());
