@@ -1,6 +1,7 @@
 package com.henriquefidelis.screen_match.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,22 @@ public class SerieService {
         return converterDados(repository.buscarSeriesRecentes());
     }
 
+    public SerieDTO obterSeriePorId(Long id) {
+        Optional <Serie> serie = repository.findById(id);
+
+        if (serie.isPresent()) {
+            Serie s = serie.get();
+            return new SerieDTO(s.getId(), s.getTitulo(), s.getTotalDeTemporadas(),
+                        s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse());
+        }
+        return null;
+    }
+
     private List<SerieDTO> converterDados(List<Serie> series) {
         return series.stream()
                 .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getTotalDeTemporadas(),
                         s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse()))
-                .collect(Collectors.toList());
-    }
+                .collect(Collectors.toList());        
+    }            
 
 }
