@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.henriquefidelis.screen_match.dto.EpisodioDTO;
 import com.henriquefidelis.screen_match.dto.SerieDTO;
 import com.henriquefidelis.screen_match.models.Serie;
 import com.henriquefidelis.screen_match.repository.SerieRepository;
@@ -24,18 +25,18 @@ public class SerieService {
     public List<SerieDTO> obterTop5Series() {
         return converterDados(repository.findTop5ByOrderByAvaliacaoDesc());
     }
-    
+
     public List<SerieDTO> obterLancamentos() {
         return converterDados(repository.buscarSeriesRecentes());
     }
 
     public SerieDTO obterSeriePorId(Long id) {
-        Optional <Serie> serie = repository.findById(id);
+        Optional<Serie> serie = repository.findById(id);
 
         if (serie.isPresent()) {
             Serie s = serie.get();
             return new SerieDTO(s.getId(), s.getTitulo(), s.getTotalDeTemporadas(),
-                        s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse());
+                    s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse());
         }
         return null;
     }
@@ -44,7 +45,19 @@ public class SerieService {
         return series.stream()
                 .map(s -> new SerieDTO(s.getId(), s.getTitulo(), s.getTotalDeTemporadas(),
                         s.getAvaliacao(), s.getGenero(), s.getAtores(), s.getPoster(), s.getSinopse()))
-                .collect(Collectors.toList());        
-    }            
+                .collect(Collectors.toList());
+    }
+
+    public List<EpisodioDTO> obterTodasAsTemporadas(Long id) {
+        Optional<Serie> serie = repository.findById(id);
+
+        if (serie.isPresent()) {
+            Serie s = serie.get();
+            return s.getEpisodios().stream()
+                    .map(e -> new EpisodioDTO(e.getTemporada(), e.getNumeroEpisodio(), e.getTitulo()))
+                    .collect(Collectors.toList());
+        }
+        return null;
+    }
 
 }
